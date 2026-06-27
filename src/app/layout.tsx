@@ -129,7 +129,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="min-h-screen bg-white text-slate-700 antialiased">
+      <body className="min-h-screen bg-white text-slate-700 antialiased overflow-x-hidden">
         <SkipLink />
         <ScrollProgress />
         {children}
