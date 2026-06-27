@@ -121,7 +121,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} scroll-smooth`}>
+    <html lang="en" className={`${inter.variable} scroll-smooth overflow-x-hidden`}>
       <head>
         {/* Schema.org structured data */}
         <script
@@ -129,10 +129,12 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="min-h-screen bg-white text-slate-700 antialiased overflow-x-hidden">
-        <SkipLink />
-        <ScrollProgress />
-        {children}
+      <body className="min-h-screen bg-white text-slate-700 antialiased overflow-x-hidden max-w-[100vw]">
+        <div className="relative overflow-hidden w-full max-w-[100vw]">
+          <SkipLink />
+          <ScrollProgress />
+          {children}
+        </div>
       </body>
     </html>
   );
