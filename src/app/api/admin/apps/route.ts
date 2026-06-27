@@ -3,7 +3,7 @@ import { getApps, createApp } from '@/lib/db';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  const apps = getApps({
+  const apps = await getApps({
     q: searchParams.get('q') ?? undefined,
     status: searchParams.get('status') ?? undefined,
     category: searchParams.get('category') ?? undefined,
@@ -29,7 +29,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Platform is required' }, { status: 400 });
     }
 
-    const app = createApp({
+    const app = await createApp({
       name: data.name.trim(),
       slug: data.slug?.trim() ?? '',
       shortDescription: data.shortDescription.trim(),

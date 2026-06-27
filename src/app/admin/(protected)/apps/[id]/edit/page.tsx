@@ -10,7 +10,7 @@ export default async function EditAppPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const app = getApp(id);
+  const app = await getApp(id);
   if (!app) notFound();
 
   return (

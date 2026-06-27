@@ -84,8 +84,8 @@ function EmptyState() {
   );
 }
 
-export default function AppsPage() {
-  const adminApps = getPublishedApps();
+export default async function AppsPage() {
+  const adminApps = await getPublishedApps();
 
   // Map AdminApp → PublicAppEntry
   const apps: PublicAppEntry[] = adminApps.map((a) => ({

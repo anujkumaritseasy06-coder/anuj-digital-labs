@@ -25,7 +25,7 @@ export async function generateMetadata(
   { params }: { params: Promise<{ slug: string }> }
 ): Promise<Metadata> {
   const { slug } = await params;
-  const app = getAppBySlug(slug);
+  const app = await getAppBySlug(slug);
   if (!app) return { title: 'App Not Found' };
 
   const title = app.seoTitle || `${app.name} | Anuj Digital Labs`;
@@ -64,7 +64,7 @@ export default async function AppDetailPage(
   { params }: { params: Promise<{ slug: string }> }
 ) {
   const { slug } = await params;
-  const adminApp = getAppBySlug(slug);
+  const adminApp = await getAppBySlug(slug);
   if (!adminApp) notFound();
 
   // Map AdminApp → PublicAppEntry
@@ -101,7 +101,7 @@ export default async function AppDetailPage(
   };
 
   // Related apps from same category
-  const relatedAdminApps = getRelatedApps(adminApp.category, adminApp.id, 3);
+  const relatedAdminApps = await getRelatedApps(adminApp.category, adminApp.id, 3);
   const relatedApps: PublicAppEntry[] = relatedAdminApps.map((a) => ({
     id: a.id,
     slug: a.slug || a.id,

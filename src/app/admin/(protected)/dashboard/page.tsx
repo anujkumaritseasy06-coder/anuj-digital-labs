@@ -13,9 +13,9 @@ function formatDate(iso: string | null): string {
   });
 }
 
-export default function DashboardPage() {
-  const stats = getStoreStats();
-  const recentApps = getApps().slice(0, 6);
+export default async function DashboardPage() {
+  const stats = await getStoreStats();
+  const recentApps = (await getApps()).slice(0, 6);
 
   const statCards = [
     {

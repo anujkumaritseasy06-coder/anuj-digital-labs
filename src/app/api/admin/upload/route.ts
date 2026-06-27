@@ -1,9 +1,13 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
 import sharp from 'sharp';
+import { v2 as cloudinary } from 'cloudinary';
 
-const UPLOAD_DIR = path.join(process.cwd(), 'public', 'uploads');
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
 const MAX_SIZE_BYTES = 10 * 1024 * 1024; // 10 MB raw input limit
 const ALLOWED_MIME = new Set(['image/jpeg', 'image/png', 'image/webp', 'image/gif']);
 
@@ -38,11 +42,6 @@ export async function POST(request: Request) {
         { error: `File too large. Maximum input size is ${MAX_SIZE_BYTES / 1024 / 1024} MB.` },
         { status: 400 }
       );
-    }
-
-    // Ensure upload directory exists
-    if (!fs.existsSync(UPLOAD_DIR)) {
-      fs.mkdirSync(UPLOAD_DIR, { recursive: true });
     }
 
     const inputBuffer = Buffer.from(await file.arrayBuffer());
@@ -80,10 +79,17 @@ export async function POST(request: Request) {
       .webp({ quality: WEBP_QUALITY, effort: 4 })
       .toBuffer();
 
-    // ── Save file ───────────────────────────────────────────────────────────
-    const filename = `${Date.now()}-${crypto.randomUUID().slice(0, 8)}.webp`;
-    const filepath = path.join(UPLOAD_DIR, filename);
-    fs.writeFileSync(filepath, outputBuffer);
+    // ── Save file to Cloudinary ─────────────────────────────────────────────
+    const filename = `${Date.now()}-${crypto.randomUUID().slice(0, 8)}`;
+    
+    // Upload the compressed webp buffer as base64 to Cloudinary
+    const base64Data = `data:image/webp;base64,${outputBuffer.toString('base64')}`;
+    const result = await cloudinary.uploader.upload(base64Data, {
+      folder: 'anuj-digital-labs/uploads',
+      public_id: filename,
+    });
+
+    const publicUrl = result.secure_url;
 
     // Build response with size info
     const originalKB = Math.round(file.size / 1024);
@@ -91,8 +97,8 @@ export async function POST(request: Request) {
     const savedPct = Math.round((1 - outputBuffer.length / file.size) * 100);
 
     return NextResponse.json({
-      url: `/uploads/${filename}`,
-      filename,
+      url: publicUrl,
+      filename: `${filename}.webp`,
       originalSize: file.size,
       compressedSize: outputBuffer.length,
       // Human-readable summary for admin UI

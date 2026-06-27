@@ -5,7 +5,7 @@ type RouteParams = { params: Promise<{ id: string }> };
 
 export async function GET(_req: Request, { params }: RouteParams) {
   const { id } = await params;
-  const app = getApp(id);
+  const app = await getApp(id);
   if (!app) return NextResponse.json({ error: 'App not found' }, { status: 404 });
   return NextResponse.json({ app });
 }
@@ -14,7 +14,7 @@ export async function PUT(request: Request, { params }: RouteParams) {
   try {
     const { id } = await params;
     const data = await request.json();
-    const app = updateApp(id, data);
+    const app = await updateApp(id, data);
     if (!app) return NextResponse.json({ error: 'App not found' }, { status: 404 });
     return NextResponse.json({ app });
   } catch (err) {
@@ -25,7 +25,7 @@ export async function PUT(request: Request, { params }: RouteParams) {
 
 export async function DELETE(_req: Request, { params }: RouteParams) {
   const { id } = await params;
-  const deleted = deleteApp(id);
+  const deleted = await deleteApp(id);
   if (!deleted) return NextResponse.json({ error: 'App not found' }, { status: 404 });
   return NextResponse.json({ ok: true });
 }
