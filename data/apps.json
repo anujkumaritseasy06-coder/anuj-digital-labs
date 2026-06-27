@@ -1,0 +1,50 @@
+{
+  "apps": [
+    {
+      "name": "FormReady",
+      "slug": "formready",
+      "shortDescription": "FormReady is an offline-first document preparation application designed to help users create upload-ready documents quickly and easily.",
+      "fullDescription": "",
+      "tagline": "Prepare perfect documents, offline.",
+      "category": "Utilities",
+      "platform": "Android",
+      "version": "1.0.0",
+      "keyFeatures": [
+        "Document Scanning •  Capture documents using the device camera. •  Import existing images from the gallery.",
+        "Manual Cropping •  Precisely adjust document boundaries. •  Remove unnecessary background areas.",
+        "Document Enhancement •  Improve document readability. •  Create cleaner and more professional document appearance.",
+        "Format Conversion Convert documents into: •  JPG •  PNG •  PDF",
+        "File Size Optimization Prepare documents according to specific upload requirements."
+      ],
+      "benefits": [],
+      "howItWorks": [],
+      "iconUrl": "/uploads/1782554903967-c5850686.png",
+      "bannerUrl": "",
+      "screenshots": [
+        "/uploads/1782554923473-fb578d03.png",
+        "/uploads/1782554933069-ca271ca7.png",
+        "/uploads/1782554940155-f1a6c41a.png",
+        "/uploads/1782554946384-61ea0500.png"
+      ],
+      "playStoreUrl": "",
+      "websiteUrl": "",
+      "learnMoreHref": "",
+      "privacyPolicyUrl": "",
+      "supportUrl": "",
+      "publishStatus": "published",
+      "releaseStatus": "coming-soon",
+      "featured": false,
+      "displayOrder": 0,
+      "themeColor": "#10b981",
+      "faqs": [],
+      "changelog": [],
+      "seoTitle": "FormReady",
+      "seoDescription": "",
+      "ogImageUrl": "",
+      "id": "bf38f8a5-434c-4e58-97bb-60e1e3aeb7ec",
+      "createdAt": "2026-06-27T10:10:13.754Z",
+      "updatedAt": "2026-06-27T10:40:36.382Z"
+    }
+  ],
+  "lastUpdated": "2026-06-27T10:40:36.382Z"
+}
