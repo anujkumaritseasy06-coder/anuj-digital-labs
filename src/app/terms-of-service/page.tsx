@@ -282,10 +282,10 @@ const sections = [
           <p className="text-slate-600 text-sm">
             Email:{" "}
             <a
-              href="mailto:contact@anujdigitallabs.com"
+              href="mailto:anujvibedeveloper@gmail.com"
               className="text-blue-700 underline underline-offset-2"
             >
-              contact@anujdigitallabs.com
+              anujvibedeveloper@gmail.com
             </a>
           </p>
           <p className="text-slate-600 text-sm mt-1">

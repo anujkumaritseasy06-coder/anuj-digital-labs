@@ -31,7 +31,7 @@ export default function LegalPageLayout({
   effectiveDate,
   lastUpdated,
   sections,
-  contactEmail = "contact@anujdigitallabs.com",
+  contactEmail = "anujvibedeveloper@gmail.com",
   contactNote,
 }: LegalPageLayoutProps) {
   return (

@@ -182,10 +182,10 @@ export default function CTABanner() {
         >
           Email us directly at{" "}
           <a
-            href="mailto:contact@anujdigitallabs.com"
+            href="mailto:anujvibedeveloper@gmail.com"
             className="text-emerald-400 hover:text-emerald-300 transition-colors font-medium underline underline-offset-2"
           >
-            contact@anujdigitallabs.com
+            anujvibedeveloper@gmail.com
           </a>
           {" "}— we respond within one business day.
         </p>

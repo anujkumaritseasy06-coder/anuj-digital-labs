@@ -43,7 +43,7 @@ const steps = [
     number: "02",
     title: "Send Your Request",
     description:
-      "Email us at contact@anujdigitallabs.com with the subject line \"Data Deletion Request\". Include the app name, the email address or account identifier associated with your data, and a brief description of your request.",
+      "Email us at anujvibedeveloper@gmail.com with the subject line \"Data Deletion Request\". Include the app name, the email address or account identifier associated with your data, and a brief description of your request.",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6" aria-hidden="true">
         <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
@@ -192,11 +192,11 @@ export default function DataDeletionPage() {
                   <p className="text-blue-200/60 text-xs font-semibold uppercase tracking-widest mb-2">Submit Your Request To</p>
                   <p className="text-2xl font-bold text-white mb-1">Support Email</p>
                   <a
-                    href="mailto:contact@anujdigitallabs.com?subject=Data%20Deletion%20Request"
+                    href="mailto:anujvibedeveloper@gmail.com?subject=Data%20Deletion%20Request"
                     id="data-deletion-email"
                     className="text-emerald-400 hover:text-emerald-300 font-semibold text-lg transition-colors break-all"
                   >
-                    contact@anujdigitallabs.com
+                    anujvibedeveloper@gmail.com
                   </a>
 
                   <div className="mt-6 pt-6 border-t border-white/10">
@@ -223,7 +223,7 @@ export default function DataDeletionPage() {
                   </div>
 
                   <a
-                    href="mailto:contact@anujdigitallabs.com?subject=Data%20Deletion%20Request"
+                    href="mailto:anujvibedeveloper@gmail.com?subject=Data%20Deletion%20Request"
                     className="mt-6 block text-center py-3 px-6 rounded-full bg-emerald-500 hover:bg-emerald-400 text-white font-semibold text-sm transition-all duration-200 shadow-lg hover:-translate-y-0.5"
                   >
                     Send Deletion Request

@@ -190,7 +190,7 @@ export default function SupportPage() {
 
                 {/* Email card */}
                 <a
-                  href="mailto:contact@anujdigitallabs.com"
+                  href="mailto:anujvibedeveloper@gmail.com"
                   id="support-email-link"
                   className="group flex items-center gap-4 bg-white border border-slate-200 rounded-2xl p-5 hover:border-blue-300 hover:shadow-md transition-all duration-200 mb-6"
                 >
@@ -203,7 +203,7 @@ export default function SupportPage() {
                   <div>
                     <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-0.5">Support Email</p>
                     <p className="text-blue-800 font-semibold text-sm group-hover:text-blue-600 transition-colors">
-                      contact@anujdigitallabs.com
+                      anujvibedeveloper@gmail.com
                     </p>
                     <p className="text-slate-400 text-xs mt-0.5">Click to open your email client</p>
                   </div>

@@ -21,7 +21,7 @@ const faqs = [
     id: "how-contact-support",
     question: "How can I contact support?",
     answer:
-      "You can reach us through our Support page or by emailing contact@anujdigitallabs.com. For app-specific support, please include the app name and a description of the issue so we can assist you more quickly. We aim to respond to all inquiries within a reasonable timeframe.",
+      "You can reach us through our Support page or by emailing anujvibedeveloper@gmail.com. For app-specific support, please include the app name and a description of the issue so we can assist you more quickly. We aim to respond to all inquiries within a reasonable timeframe.",
   },
   {
     id: "where-download-apps",
@@ -33,7 +33,7 @@ const faqs = [
     id: "how-report-bugs",
     question: "How do I report a bug or issue?",
     answer:
-      "Bug reports can be submitted through our Support page or by emailing contact@anujdigitallabs.com. Please include: the app name and version, a description of what happened, the steps to reproduce the issue, and your device model and Android version if applicable. Detailed reports help us address issues faster.",
+      "Bug reports can be submitted through our Support page or by emailing anujvibedeveloper@gmail.com. Please include: the app name and version, a description of what happened, the steps to reproduce the issue, and your device model and Android version if applicable. Detailed reports help us address issues faster.",
   },
   {
     id: "do-apps-receive-updates",

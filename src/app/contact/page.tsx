@@ -34,8 +34,8 @@ const contactInfo = [
       </svg>
     ),
     label: "Business Email",
-    value: "contact@anujdigitallabs.com",
-    href: "mailto:contact@anujdigitallabs.com",
+    value: "anujvibedeveloper@gmail.com",
+    href: "mailto:anujvibedeveloper@gmail.com",
     description: "For project inquiries and business discussions",
   },
   {
