@@ -8,6 +8,7 @@ const footerLinks = {
     { href: "/about", label: "About Us" },
     { href: "/solutions", label: "Solutions" },
     { href: "/apps", label: "Our Apps" },
+    { href: "/websites", label: "Websites" },
     { href: "/updates", label: "Latest Updates" },
     { href: "/faq", label: "FAQ" },
     { href: "/support", label: "Support" },

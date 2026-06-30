@@ -8,6 +8,7 @@ const navLinks = [
   { href: "/",          label: "Home",     isHash: false },
   { href: "/about",     label: "About",    isHash: false },
   { href: "/apps",      label: "Our Apps", isHash: false },
+  { href: "/websites",  label: "Websites", isHash: false },
   { href: "/solutions", label: "Solutions",isHash: false },
   { href: "/faq",       label: "FAQ",      isHash: false },
   { href: "/support",   label: "Support",  isHash: false },
