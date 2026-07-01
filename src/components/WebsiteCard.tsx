@@ -1,180 +1,148 @@
 'use client';
 
-import React, { useState, useRef, MouseEvent } from 'react';
-import Link from 'next/link';
+import React, { useState, useRef, MouseEvent, useEffect } from 'react';
 import Image from 'next/image';
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import type { PublicWebsiteEntry } from '@/types/websites';
-import PremiumBadge from './PremiumBadge';
 
 export default function WebsiteCard({ website }: { website: PublicWebsiteEntry }) {
-  const [rotateX, setRotateX] = useState(0);
-  const [rotateY, setRotateY] = useState(0);
-  const [glareX, setGlareX] = useState(50);
-  const [glareY, setGlareY] = useState(50);
-  const [glareOpacity, setGlareOpacity] = useState(0);
-  const cardRef = useRef<HTMLDivElement>(null);
+  const cardRef = useRef<HTMLAnchorElement>(null);
+  const [isMounted, setIsMounted] = useState(false);
 
-  const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  // Framer motion values for 3D tilt
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  const mouseXSpring = useSpring(x, { stiffness: 400, damping: 25 });
+  const mouseYSpring = useSpring(y, { stiffness: 400, damping: 25 });
+
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["15deg", "-15deg"]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-15deg", "15deg"]);
+
+  const handleMouseMove = (e: MouseEvent<HTMLAnchorElement>) => {
     if (!cardRef.current) return;
     const rect = cardRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-
-    const maxRotation = 10; // degrees
-    const rX = ((y - centerY) / centerY) * -maxRotation;
-    const rY = ((x - centerX) / centerX) * maxRotation;
-
-    setRotateX(rX);
-    setRotateY(rY);
-
-    // Glare position (percentage)
-    setGlareX((x / rect.width) * 100);
-    setGlareY((y / rect.height) * 100);
-    setGlareOpacity(0.15);
+    const width = rect.width;
+    const height = rect.height;
+    
+    // For 3D Tilt (-0.5 to 0.5)
+    const tiltX = (e.clientX - rect.left) / width - 0.5;
+    const tiltY = (e.clientY - rect.top) / height - 0.5;
+    x.set(tiltX);
+    y.set(tiltY);
   };
 
   const handleMouseLeave = () => {
-    setRotateX(0);
-    setRotateY(0);
-    setGlareOpacity(0);
+    x.set(0);
+    y.set(0);
   };
 
+  if (!isMounted) return null; // Avoid hydration mismatch on motion values
+
+  const themeColor = website.themeColor || '#10b981';
+  const hoverColor = website.hoverColor || '#34d399';
+
   return (
-    <div
-      className="group perspective-1000 relative"
-      style={{ perspective: '1000px' }}
+    <motion.a
+      href={website.websiteUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      ref={cardRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{
+        rotateX,
+        rotateY,
+        transformStyle: "preserve-3d",
+        '--hover-color': hoverColor,
+      } as React.CSSProperties}
+      className="group relative flex flex-col w-full h-[380px] rounded-[32px] cursor-pointer perspective-[1200px]"
+      initial={{ y: 30, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      whileHover={{ scale: 1.03, y: -10 }}
+      transition={{ type: "spring", stiffness: 300, damping: 25, mass: 0.5 }}
     >
-      <div
-        ref={cardRef}
-        onMouseMove={handleMouseMove}
-        onMouseLeave={handleMouseLeave}
-        className="relative w-full rounded-3xl overflow-hidden transition-all duration-300 ease-out preserve-3d h-full flex flex-col"
-        style={{
-          transform: `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
-          background: 'rgba(15,23,42,0.6)',
-          border: '1px solid rgba(255,255,255,0.05)',
-          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 40px rgba(0,0,0,0.3)',
-          transformStyle: 'preserve-3d',
-        }}
-      >
-        {/* Glow behind card matching theme color */}
-        <div 
-          className="absolute -inset-2 rounded-[2rem] opacity-0 group-hover:opacity-30 blur-2xl transition-opacity duration-500 z-[-1]"
-          style={{ background: website.themeColor }}
-        />
+      {/* Outer ambient glow behind the card (subtle constant glow) */}
+      <div 
+        className="absolute inset-0 z-[-1] opacity-25 rounded-[32px] blur-xl group-hover:opacity-50 transition-all duration-700" 
+        style={{ backgroundColor: themeColor }}
+      />
 
-        {/* Dynamic Glare */}
-        <div
-          className="pointer-events-none absolute inset-0 z-20 transition-opacity duration-300 rounded-3xl mix-blend-overlay"
-          style={{
-            opacity: glareOpacity,
-            background: `radial-gradient(circle at ${glareX}% ${glareY}%, rgba(255,255,255,0.8) 0%, transparent 50%)`,
-          }}
-        />
+      {/* Animated Spinning Border Layer */}
+      <div className="absolute inset-0 rounded-[32px] overflow-hidden z-0 border border-white/5">
+         <div 
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150%] h-[150%] animate-[spin_4s_linear_infinite] opacity-70 group-hover:opacity-100 transition-opacity duration-500" 
+            style={{ background: `conic-gradient(from 0deg, transparent 0 280deg, ${themeColor}cc 360deg)` }}
+         />
+      </div>
 
-        {/* Thumbnail Container */}
-        <div className="relative h-64 w-full overflow-hidden shrink-0 bg-slate-900 border-b border-white/5">
-          {website.thumbnailUrl ? (
-            <img
-              src={website.thumbnailUrl}
+      {/* Main Card Container (Inner Mask) */}
+      <div className="absolute inset-[1.5px] rounded-[30.5px] bg-slate-950 flex flex-col overflow-hidden z-10">
+        
+        {/* Banner Image Container */}
+        <div className="relative w-full h-[240px] shrink-0 bg-slate-950 overflow-hidden z-0">
+          {website.bannerImage ? (
+            <Image
+              src={website.bannerImage}
               alt={website.name}
-              className="object-cover w-full h-full transition-transform duration-700 ease-out group-hover:scale-105"
+              fill
+              className="object-cover transition-transform duration-1000 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-[1.12]"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-slate-700">No Image</div>
+            <div className="w-full h-full flex items-center justify-center text-slate-700 font-medium tracking-widest uppercase text-xs">No Image Available</div>
           )}
           
-          {/* Top Overlays: Status and Badges */}
-          <div className="absolute top-4 left-4 right-4 flex justify-between items-start z-10 translate-z-[20px]" style={{ transform: 'translateZ(20px)' }}>
-            <div className="flex flex-col gap-2">
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide bg-black/50 backdrop-blur-md border border-white/10 text-white">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                Live
+          {/* Subtle vignette on image */}
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-90" />
+          
+          {/* Top Badges (Translate Z for 3D pop) */}
+          <div className="absolute top-5 left-5 right-5 flex justify-between items-start z-30 transform-gpu" style={{ transform: 'translateZ(30px)' }}>
+            {website.featured ? (
+              <span className="px-3.5 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest bg-emerald-500 text-slate-950 shadow-[0_0_20px_rgba(16,185,129,0.5)] transform transition-transform group-hover:scale-105 group-hover:-translate-y-1">
+                Featured
               </span>
-              {website.badges.map(badge => badge !== 'None' && (
-                <PremiumBadge key={badge} type={badge} />
-              ))}
-            </div>
+            ) : (
+              <div /> // Placeholder
+            )}
             
-            <div className="flex flex-col items-end gap-2">
-              <span className="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide bg-white/10 backdrop-blur-md border border-white/20 text-white">
-                {website.category}
-              </span>
-            </div>
+            <span className="px-3.5 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest bg-black/60 text-white backdrop-blur-md border border-white/20 transform transition-transform group-hover:scale-105 group-hover:-translate-y-1">
+              {website.category}
+            </span>
           </div>
         </div>
 
-        {/* Content Container */}
-        <div className="p-6 flex-1 flex flex-col translate-z-[30px] relative z-10" style={{ transform: 'translateZ(30px)' }}>
-          {/* Header */}
-          <div className="mb-4">
-            <h3 className="text-2xl font-bold text-white tracking-tight mb-1 group-hover:text-emerald-400 transition-colors">
-              {website.name}
-            </h3>
-            <p className="text-sm font-medium" style={{ color: website.themeColor }}>
-              {website.industry} {website.clientName && `• ${website.clientName}`}
-            </p>
-          </div>
-
-          <p className="text-slate-400 text-sm leading-relaxed mb-6 flex-1">
-            {website.shortDescription}
-          </p>
-
-          {/* Metrics Row */}
-          <div className="grid grid-cols-3 gap-2 mb-6 p-3 rounded-2xl bg-white/[0.03] border border-white/[0.05]">
-            <div className="text-center">
-              <div className="text-xs text-slate-500 mb-1">Performance</div>
-              <div className="text-sm font-bold text-emerald-400">{website.scores?.performance ?? 0}</div>
+        {/* Content Area */}
+        <div className="p-6 flex-1 flex flex-col justify-center z-30 transform-gpu bg-slate-900/60 backdrop-blur-md border-t border-white/5 relative" style={{ transform: 'translateZ(20px)' }}>
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-2xl font-extrabold text-white tracking-tight group-hover:text-[var(--hover-color)] transition-colors duration-500 drop-shadow-md">
+                {website.name}
+              </h3>
+              <p className="text-sm font-medium text-slate-400 mt-1 flex items-center gap-2 group-hover:text-[var(--hover-color)] transition-colors duration-300">
+                <span>View live website</span>
+                <motion.span 
+                  className="inline-block opacity-0 -ml-2 group-hover:opacity-100 group-hover:ml-0 transition-all duration-300"
+                >
+                  →
+                </motion.span>
+              </p>
             </div>
-            <div className="text-center border-l border-white/[0.05]">
-              <div className="text-xs text-slate-500 mb-1">SEO</div>
-              <div className="text-sm font-bold text-emerald-400">{website.scores?.seo ?? 0}</div>
+            
+            <div className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 group-hover:text-slate-950 group-hover:bg-[var(--hover-color)] group-hover:border-[var(--hover-color)] transition-all duration-500 shadow-[0_0_0_rgba(16,185,129,0)] group-hover:shadow-[0_0_25px_var(--hover-color)] transform group-hover:-translate-y-1 group-hover:rotate-12 group-hover:scale-110 relative overflow-hidden">
+               {/* Internal button shine effect */}
+               <div className="absolute inset-0 bg-white/30 -translate-x-full skew-x-[-45deg] group-hover:translate-x-[200%] transition-transform duration-1000 ease-in-out" />
+              <svg className="w-5 h-5 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
             </div>
-            <div className="text-center border-l border-white/[0.05]">
-              <div className="text-xs text-slate-500 mb-1">Security</div>
-              <div className="text-sm font-bold text-emerald-400">{website.scores?.security ?? 0}</div>
-            </div>
-          </div>
-
-          {/* Tech Stack Tags */}
-          <div className="flex flex-wrap gap-2 mb-6">
-            {website.techStack.slice(0, 4).map((tech, i) => (
-              <span key={i} className="px-2 py-1 rounded-md text-[10px] font-medium text-slate-300 bg-white/[0.05] border border-white/10">
-                {tech}
-              </span>
-            ))}
-            {website.techStack.length > 4 && (
-              <span className="px-2 py-1 rounded-md text-[10px] font-medium text-slate-500 bg-white/[0.02] border border-white/5">
-                +{website.techStack.length - 4}
-              </span>
-            )}
-          </div>
-
-          {/* Action Buttons */}
-          <div className="flex gap-3 mt-auto">
-            <Link 
-              href={`/websites/${website.slug}`}
-              className="flex-1 text-center px-4 py-2.5 rounded-xl text-sm font-bold text-white transition-all bg-white/10 hover:bg-white/20 border border-white/10"
-            >
-              View Details
-            </Link>
-            {website.websiteUrl && (
-              <a 
-                href={website.websiteUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex-1 text-center px-4 py-2.5 rounded-xl text-sm font-bold text-slate-900 transition-all hover:scale-[1.02]"
-                style={{ background: website.themeColor, boxShadow: `0 0 15px ${website.themeColor}40` }}
-              >
-                Visit Site
-              </a>
-            )}
           </div>
         </div>
       </div>
-    </div>
+    </motion.a>
   );
 }

@@ -6,8 +6,7 @@ import type { AdminApp } from '@/types/admin';
 import StatusBadge from '@/components/admin/StatusBadge';
 import ConfirmModal from '@/components/admin/ConfirmModal';
 
-const CATEGORIES = ['all', 'Productivity', 'Utilities', 'Business', 'AI Tools', 'Finance', 'Education', 'Health', 'Lifestyle', 'Other'];
-const PLATFORMS = ['all', 'Android', 'Web', 'Android & Web'];
+const CATEGORIES = ['all', 'Android', 'AI', 'Productivity', 'Business', 'Education', 'Health', 'Finance', 'Utility', 'Calculator', 'Tools', 'Document', 'Scanner', 'Offline'];
 const STATUSES = ['all', 'published', 'draft'];
 
 export default function AppsListPage() {
@@ -16,7 +15,6 @@ export default function AppsListPage() {
   const [q, setQ] = useState('');
   const [status, setStatus] = useState('all');
   const [category, setCategory] = useState('all');
-  const [platform, setPlatform] = useState('all');
   const [deleteTarget, setDeleteTarget] = useState<AdminApp | null>(null);
   const [togglingId, setTogglingId] = useState<string | null>(null);
 
@@ -26,12 +24,11 @@ export default function AppsListPage() {
     if (q) params.set('q', q);
     if (status !== 'all') params.set('status', status);
     if (category !== 'all') params.set('category', category);
-    if (platform !== 'all') params.set('platform', platform);
     const res = await fetch(`/api/admin/apps?${params}`);
     const data = await res.json();
     setApps(data.apps ?? []);
     setLoading(false);
-  }, [q, status, category, platform]);
+  }, [q, status, category]);
 
   useEffect(() => {
     const t = setTimeout(fetchApps, 250);
@@ -94,7 +91,7 @@ export default function AppsListPage() {
           <input
             id="apps-search"
             type="text"
-            placeholder="Search by name or description…"
+            placeholder="Search by name…"
             value={q}
             onChange={(e) => setQ(e.target.value)}
             className="w-full pl-9 pr-3 py-2 rounded-xl text-sm text-slate-300 placeholder-slate-600 outline-none focus:ring-1 focus:ring-emerald-500/40 transition-all"
@@ -106,9 +103,6 @@ export default function AppsListPage() {
         </select>
         <select id="filter-category" value={category} onChange={(e) => setCategory(e.target.value)} className={selectCls} style={selectStyle}>
           {CATEGORIES.map((c) => <option key={c} value={c}>{c === 'all' ? 'All Categories' : c}</option>)}
-        </select>
-        <select id="filter-platform" value={platform} onChange={(e) => setPlatform(e.target.value)} className={selectCls} style={selectStyle}>
-          {PLATFORMS.map((p) => <option key={p} value={p}>{p === 'all' ? 'All Platforms' : p}</option>)}
         </select>
       </div>
 
@@ -134,7 +128,7 @@ export default function AppsListPage() {
             <table className="w-full text-sm">
               <thead>
                 <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                  {['App', 'Category', 'Platform', 'Release', 'Status', 'Order', 'Actions'].map((h) => (
+                  {['App', 'Category', 'Release', 'Status', 'Order', 'Actions'].map((h) => (
                     <th key={h} className="px-6 py-3 text-left text-[11px] font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                       {h}
                     </th>
@@ -150,10 +144,10 @@ export default function AppsListPage() {
                   >
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
-                        {app.iconUrl ? (
-                          <img src={app.iconUrl} alt={app.name} className="w-9 h-9 rounded-xl object-cover flex-shrink-0" />
+                        {app.bannerUrl ? (
+                          <img src={app.bannerUrl} alt={app.name} className="w-12 h-8 rounded-lg object-cover flex-shrink-0" />
                         ) : (
-                          <div className="w-9 h-9 rounded-xl flex-shrink-0 flex items-center justify-center"
+                          <div className="w-12 h-8 rounded-lg flex-shrink-0 flex items-center justify-center"
                             style={{ background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.18)' }}>
                             <svg className="w-4 h-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
@@ -162,12 +156,15 @@ export default function AppsListPage() {
                         )}
                         <div className="min-w-0">
                           <p className="text-white font-medium truncate max-w-[180px]">{app.name}</p>
-                          {app.version && <p className="text-slate-600 text-xs">v{app.version}</p>}
+                          {(app.playStoreUrl || app.websiteUrl) && (
+                             <a href={app.playStoreUrl || app.websiteUrl} target="_blank" rel="noopener noreferrer" className="text-slate-500 hover:text-emerald-400 hover:underline text-xs truncate max-w-[150px] block">
+                               {app.playStoreUrl ? 'Play Store' : 'External Link'}
+                             </a>
+                          )}
                         </div>
                       </div>
                     </td>
                     <td className="px-6 py-4 text-slate-400 whitespace-nowrap">{app.category}</td>
-                    <td className="px-6 py-4 text-slate-400 whitespace-nowrap">{app.platform}</td>
                     <td className="px-6 py-4">
                       <span className="text-xs px-2 py-1 rounded-full"
                         style={{

@@ -44,19 +44,9 @@ export async function GET() {
         return urlStr;
       };
 
-      // Process icon
-      if (appRef.iconUrl) {
-        appRef.iconUrl = await uploadLocalImage(appRef.iconUrl);
-      }
       // Process banner
       if (appRef.bannerUrl) {
         appRef.bannerUrl = await uploadLocalImage(appRef.bannerUrl);
-      }
-      // Process screenshots
-      if (appRef.screenshots && appRef.screenshots.length > 0) {
-        for (let i = 0; i < appRef.screenshots.length; i++) {
-          appRef.screenshots[i] = await uploadLocalImage(appRef.screenshots[i]);
-        }
       }
 
       // 2. Save to Firestore

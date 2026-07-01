@@ -115,7 +115,7 @@ export default async function DashboardPage() {
             <table className="w-full text-sm">
               <thead>
                 <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
-                  {['App', 'Category', 'Platform', 'Status', 'Updated', ''].map((h) => (
+                  {['App', 'Category', 'Status', 'Updated', ''].map((h) => (
                     <th key={h} className="px-6 py-3 text-left text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
                       {h}
                     </th>
@@ -131,10 +131,10 @@ export default async function DashboardPage() {
                   >
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
-                        {app.iconUrl ? (
-                          <img src={app.iconUrl} alt={app.name} className="w-8 h-8 rounded-lg object-cover flex-shrink-0" />
+                        {app.bannerUrl ? (
+                          <img src={app.bannerUrl} alt={app.name} className="w-12 h-8 rounded-lg object-cover flex-shrink-0" />
                         ) : (
-                          <div className="w-8 h-8 rounded-lg flex-shrink-0 flex items-center justify-center"
+                          <div className="w-12 h-8 rounded-lg flex-shrink-0 flex items-center justify-center"
                             style={{ background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.2)' }}>
                             <svg className="w-4 h-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
@@ -143,12 +143,15 @@ export default async function DashboardPage() {
                         )}
                         <div>
                           <p className="text-white font-medium">{app.name}</p>
-                          <p className="text-slate-500 text-xs truncate max-w-[200px]">{app.shortDescription}</p>
+                          {(app.playStoreUrl || app.websiteUrl) && (
+                             <a href={app.playStoreUrl || app.websiteUrl} target="_blank" rel="noopener noreferrer" className="text-slate-500 hover:text-emerald-400 hover:underline text-xs truncate max-w-[150px] block">
+                               {app.playStoreUrl ? 'Play Store' : 'External Link'}
+                             </a>
+                          )}
                         </div>
                       </div>
                     </td>
                     <td className="px-6 py-4 text-slate-400">{app.category}</td>
-                    <td className="px-6 py-4 text-slate-400">{app.platform}</td>
                     <td className="px-6 py-4"><StatusBadge status={app.publishStatus} size="sm" /></td>
                     <td className="px-6 py-4 text-slate-500 text-xs whitespace-nowrap">
                       {new Date(app.updatedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
@@ -246,8 +249,8 @@ export default async function DashboardPage() {
                   <tr key={site.id} className="transition-colors hover:bg-white/[0.02]" style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
-                        {site.thumbnailUrl ? (
-                          <img src={site.thumbnailUrl} alt={site.name} className="w-12 h-8 rounded-lg object-cover flex-shrink-0" />
+                        {site.bannerImage ? (
+                          <img src={site.bannerImage} alt={site.name} className="w-12 h-8 rounded-lg object-cover flex-shrink-0" />
                         ) : (
                           <div className="w-12 h-8 rounded-lg flex-shrink-0 flex items-center justify-center" style={{ background: 'rgba(139,92,246,0.1)', border: '1px solid rgba(139,92,246,0.2)' }}>
                             <svg className="w-4 h-4 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -257,7 +260,9 @@ export default async function DashboardPage() {
                         )}
                         <div>
                           <p className="text-white font-medium">{site.name}</p>
-                          <p className="text-slate-500 text-xs truncate max-w-[200px]">{site.shortDescription}</p>
+                          <a href={site.websiteUrl} target="_blank" rel="noopener noreferrer" className="text-slate-500 hover:text-emerald-400 hover:underline text-xs truncate max-w-[200px] block">
+                            {site.websiteUrl}
+                          </a>
                         </div>
                       </div>
                     </td>

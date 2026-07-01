@@ -7,11 +7,11 @@ import StatusBadge from '@/components/admin/StatusBadge';
 import ConfirmModal from '@/components/admin/ConfirmModal';
 
 const CATEGORIES = [
-  'all', 'Business', 'Restaurant', 'Education', 'Healthcare', 'Portfolio', 
-  'Landing Page', 'Corporate', 'Ecommerce', 'Blog', 'Calculator', 
-  'Tools', 'SaaS', 'AI', 'Government', 'Personal', 'NGO', 'Other'
+  'all', 'Corporate', 'Business', 'Restaurant', 'Education', 'Healthcare', 'Portfolio', 
+  'Landing Page', 'Ecommerce', 'Blog', 'Calculator', 
+  'Tools', 'AI', 'Government', 'Personal', 'Other'
 ];
-const STATUSES = ['all', 'published', 'draft', 'archived'];
+const STATUSES = ['all', 'published', 'draft'];
 
 export default function WebsitesListPage() {
   const [websites, setWebsites] = useState<AdminWebsite[]>([]);
@@ -95,7 +95,7 @@ export default function WebsitesListPage() {
           <input
             id="websites-search"
             type="text"
-            placeholder="Search by name or description…"
+            placeholder="Search by name…"
             value={q}
             onChange={(e) => setQ(e.target.value)}
             className="w-full pl-9 pr-3 py-2 rounded-xl text-sm text-slate-300 placeholder-slate-600 outline-none focus:ring-1 focus:ring-emerald-500/40 transition-all"
@@ -132,7 +132,7 @@ export default function WebsitesListPage() {
             <table className="w-full text-sm">
               <thead>
                 <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                  {['Website', 'Category', 'Status', 'Order', 'Actions'].map((h) => (
+                  {['Website', 'Category', 'Status', 'Order', 'Featured', 'Actions'].map((h) => (
                     <th key={h} className="px-6 py-3 text-left text-[11px] font-semibold text-slate-500 uppercase tracking-wider whitespace-nowrap">
                       {h}
                     </th>
@@ -148,8 +148,8 @@ export default function WebsitesListPage() {
                   >
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
-                        {site.thumbnailUrl ? (
-                          <img src={site.thumbnailUrl} alt={site.name} className="w-12 h-9 rounded-xl object-cover flex-shrink-0" />
+                        {site.bannerImage ? (
+                          <img src={site.bannerImage} alt={site.name} className="w-12 h-9 rounded-xl object-cover flex-shrink-0" />
                         ) : (
                           <div className="w-12 h-9 rounded-xl flex-shrink-0 flex items-center justify-center"
                             style={{ background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.18)' }}>
@@ -168,7 +168,8 @@ export default function WebsitesListPage() {
                     </td>
                     <td className="px-6 py-4 text-slate-400 whitespace-nowrap">{site.category}</td>
                     <td className="px-6 py-4"><StatusBadge status={site.publishStatus} size="sm" /></td>
-                    <td className="px-6 py-4 text-slate-500 text-center">{site.displayOrder}</td>
+                    <td className="px-6 py-4 text-slate-500 text-center">{site.sortOrder}</td>
+                    <td className="px-6 py-4 text-slate-500 text-center">{site.featured ? 'Yes' : 'No'}</td>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-2">
                         {/* Toggle publish */}

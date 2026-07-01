@@ -1,14 +1,12 @@
 import React from 'react';
 import { getPublishedWebsites } from '@/lib/websites-db';
-import WebsiteCard from '@/components/WebsiteCard';
-import { PageHero } from '@/components/PageHero';
-
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import ClientGallery from './ClientGallery';
 
 export const metadata = {
   title: 'Websites | Anuj Digital Labs',
-  description: 'Explore our portfolio of premium, award-winning websites and digital experiences.',
+  description: 'Explore our portfolio of premium websites and digital experiences.',
 };
 
 export const dynamic = 'force-dynamic';
@@ -19,37 +17,28 @@ export default async function WebsitesPage() {
   return (
     <>
       <Navbar />
-      <main id="main-content">
-        <PageHero 
-          title="Web Experience Portfolio"
-          description="A curated collection of premium, award-winning websites. We don't just build sites; we craft digital experiences that leave a lasting impression."
-          badge="Premium Websites"
-          breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Websites' }]}
-        />
-
-        <div
-          className="min-h-[60vh] py-20 px-4 sm:px-6 lg:px-8 relative"
-          style={{
-            background: 'linear-gradient(180deg, #020617 0%, #0a0f1e 40%, #0d1526 100%)',
-          }}
-        >
-          <div className="absolute inset-0 dot-grid opacity-30 pointer-events-none" aria-hidden="true" />
-
-          <div className="max-w-7xl mx-auto relative z-10">
-            {websites.length === 0 ? (
-              <div className="text-center py-20 text-slate-400">
-                <p className="text-xl">No websites published yet.</p>
-                <p className="text-sm mt-2 text-slate-500">Check back soon for our latest work.</p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {websites.map(website => (
-                  <WebsiteCard key={website.id} website={website} />
-                ))}
-              </div>
-            )}
+      <main id="main-content" className="min-h-screen bg-slate-950">
+        {/* Premium Hero Section */}
+        <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden">
+          {/* Background glow */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-emerald-500/20 rounded-full blur-[120px] pointer-events-none opacity-50" />
+          
+          <div className="max-w-7xl mx-auto px-6 relative z-10 text-center">
+            <h1 className="text-5xl md:text-7xl font-extrabold text-white tracking-tight mb-6">
+              Website <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-emerald-200">Showcase</span>
+            </h1>
+            <p className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
+              A curated collection of premium websites. We don't just build sites; we craft digital experiences that leave a lasting impression.
+            </p>
           </div>
-        </div>
+        </section>
+
+        {/* Gallery Section */}
+        <section className="pb-32 px-6">
+          <div className="max-w-7xl mx-auto relative z-10">
+            <ClientGallery websites={websites} />
+          </div>
+        </section>
       </main>
       <Footer />
     </>

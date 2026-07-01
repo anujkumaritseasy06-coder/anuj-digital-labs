@@ -59,8 +59,22 @@ export default function ImageUploader({
     if (file) handleFile(file);
   };
 
+  const handlePaste = (e: React.ClipboardEvent) => {
+    const items = e.clipboardData.items;
+    for (let i = 0; i < items.length; i++) {
+      if (items[i].type.indexOf('image') !== -1) {
+        const file = items[i].getAsFile();
+        if (file) {
+          e.preventDefault();
+          handleFile(file);
+          break;
+        }
+      }
+    }
+  };
+
   return (
-    <div>
+    <div onPaste={handlePaste}>
       <label className="block text-sm font-medium text-slate-300 mb-2" htmlFor={id}>
         {label}
       </label>
@@ -118,7 +132,7 @@ export default function ImageUploader({
                 d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
             <p className="text-slate-400 text-sm">
-              <span className="text-emerald-400 font-medium">Click to upload</span> or drag &amp; drop
+              <span className="text-emerald-400 font-medium">Click to upload</span>, drag &amp; drop, or paste
             </p>
             <p className="text-slate-600 text-xs flex items-center gap-1">
               <svg className="w-3 h-3 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
