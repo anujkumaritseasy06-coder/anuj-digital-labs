@@ -6,43 +6,6 @@ import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import type { PublicWebsiteEntry } from '@/types/websites';
 
 export default function WebsiteCard({ website }: { website: PublicWebsiteEntry }) {
-  const cardRef = useRef<HTMLAnchorElement>(null);
-  const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  // Framer motion values for 3D tilt
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-
-  const mouseXSpring = useSpring(x, { stiffness: 400, damping: 25 });
-  const mouseYSpring = useSpring(y, { stiffness: 400, damping: 25 });
-
-  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["15deg", "-15deg"]);
-  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-15deg", "15deg"]);
-
-  const handleMouseMove = (e: MouseEvent<HTMLAnchorElement>) => {
-    if (!cardRef.current) return;
-    const rect = cardRef.current.getBoundingClientRect();
-    const width = rect.width;
-    const height = rect.height;
-    
-    // For 3D Tilt (-0.5 to 0.5)
-    const tiltX = (e.clientX - rect.left) / width - 0.5;
-    const tiltY = (e.clientY - rect.top) / height - 0.5;
-    x.set(tiltX);
-    y.set(tiltY);
-  };
-
-  const handleMouseLeave = () => {
-    x.set(0);
-    y.set(0);
-  };
-
-  if (!isMounted) return null; // Avoid hydration mismatch on motion values
-
   const themeColor = website.themeColor || '#10b981';
   const hoverColor = website.hoverColor || '#34d399';
 
@@ -51,16 +14,10 @@ export default function WebsiteCard({ website }: { website: PublicWebsiteEntry }
       href={website.websiteUrl}
       target="_blank"
       rel="noopener noreferrer"
-      ref={cardRef}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
       style={{
-        rotateX,
-        rotateY,
-        transformStyle: "preserve-3d",
         '--hover-color': hoverColor,
       } as React.CSSProperties}
-      className="group relative flex flex-col w-full h-[380px] rounded-[32px] cursor-pointer perspective-[1200px]"
+      className="group relative flex flex-col w-full h-[380px] rounded-[32px] cursor-pointer"
       initial={{ y: 30, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       whileHover={{ scale: 1.03, y: -10 }}
@@ -100,24 +57,24 @@ export default function WebsiteCard({ website }: { website: PublicWebsiteEntry }
           {/* Subtle vignette on image */}
           <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-90" />
           
-          {/* Top Badges (Translate Z for 3D pop) */}
-          <div className="absolute top-5 left-5 right-5 flex justify-between items-start z-30 transform-gpu" style={{ transform: 'translateZ(30px)' }}>
+          {/* Top Badges */}
+          <div className="absolute top-5 left-5 right-5 flex justify-between items-start z-30">
             {website.featured ? (
               <span className="px-3.5 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest bg-emerald-500 text-slate-950 shadow-[0_0_20px_rgba(16,185,129,0.5)] transform transition-transform group-hover:scale-105 group-hover:-translate-y-1">
                 Featured
               </span>
             ) : (
-              <div /> // Placeholder
+              <div />
             )}
             
-            <span className="px-3.5 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest bg-black/60 text-white backdrop-blur-md border border-white/20 transform transition-transform group-hover:scale-105 group-hover:-translate-y-1">
+            <span className="px-3.5 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest bg-black/60 text-white border border-white/20 transform transition-transform group-hover:scale-105 group-hover:-translate-y-1">
               {website.category}
             </span>
           </div>
         </div>
 
         {/* Content Area */}
-        <div className="p-6 flex-1 flex flex-col justify-center z-30 transform-gpu bg-slate-900/60 backdrop-blur-md border-t border-white/5 relative" style={{ transform: 'translateZ(20px)' }}>
+        <div className="p-6 flex-1 flex flex-col justify-center z-30 bg-[#0f172a] border-t border-white/5 relative">
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-2xl font-extrabold text-white tracking-tight group-hover:text-[var(--hover-color)] transition-colors duration-500 drop-shadow-md">
